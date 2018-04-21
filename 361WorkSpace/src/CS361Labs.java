@@ -208,7 +208,7 @@ public class CS361Labs {
 	public static void main(String[] args) {
 		CS361Labs lab1 = new CS361Labs();
 		try{
-			lab1.fileToRead(new File("lab1_data.txt"));
+			lab1.fileToRead(new File("../nstarklab1/lab1 data file/lab1_data.txt"));
 		} catch (FileNotFoundException e){
 			e.printStackTrace();
 		}
