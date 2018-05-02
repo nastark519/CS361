@@ -15,6 +15,28 @@ public class CS361Labs {
 	
 	/**************************************************************** LAB 2 *********************************************************************************/
 	
+	public void binSort(int[] arrB, int lengthTo){
+		int n = getMax(arrB, lengthTo);
+		int[] bin = new int[n+1];
+		int i;
+		
+		for(i=0;i<=n;i++){
+			bin[i] = 0;
+		}
+		
+		for(i=0;i<=lengthTo - 1;i++){
+			bin[arrB[i]]++;
+		}
+		
+		int outIndex = 0;
+		for(i=0;i<=n;i++){
+			for(int j=0;j<bin[i];j++){
+				arrB[outIndex]=i;
+				outIndex++;
+			}
+		}
+	}
+	
 	/* Much of the below code was helped and found on geeks for geeks https://www.geeksforgeeks.org/radix-sort/*/
 	
 	/**
@@ -282,8 +304,16 @@ public class CS361Labs {
 			sumOfArr += arr[i]; 
 		}
 		System.out.println("The sum of the array is " + sumOfArr + ".");
-		
 	}
+	
+	/**
+	 * Print the last ten integers of the array.
+	 */
+	public void printLastTen(){
+		for(int c=arr.length - 11;c<arr.length;c++){
+			System.out.println(arr[c]);
+			}
+		}
 	
 
 	/**
@@ -299,7 +329,26 @@ public class CS361Labs {
 		if(arr.length - 1 ==9999999){
 				System.out.println("The array is of proper length.");
 				}
+		/********************************************************* BIN SORT *******************************************************************************/
+		int x = 1;
+		for(int y = 1000; y <= arr.length; y  = y * 10){
+		long binSortTime = System.nanoTime();
+		lab2.binSort(arr,y);
+			System.out.println("Radix sort ran " + x + ": " + (System.nanoTime() - binSortTime));
+			x++;
+		}
 		
+		if(lab2.flgIsSorted(arr)){
+			System.out.println("The array was sorted using bin sort.");
+		}else{
+			System.out.println("It didn't work.");
+		}
+		
+		
+		/********************************************************* BIN SORT *******************************************************************************/
+
+		/********************************************************* RADIX SORT *******************************************************************************/
+		/*
 		int x = 1;
 		for(int y = 1000; y <= arr.length; y  = y * 10){
 		long radixSortTime = System.nanoTime();
@@ -308,15 +357,14 @@ public class CS361Labs {
 			x++;
 		}
 		
-		//lab2.radixsort(arr,arr.length); test for radix sort
 		if(lab2.flgIsSorted(arr)){
 			System.out.println("The array was sorted using radix sort.");
 		}else{
 			System.out.println("It didn't work.");
 		}
-		/*for(int c=arr.length - 11;c<arr.length;c++){
-			System.out.println(arr[c]);
-		}*/
+		*/
+		/********************************************************* RADIX SORT *******************************************************************************/
+		
 		/********************************************************* QUICK SORT *******************************************************************************/
 		/*
 		int x = 1;
@@ -354,7 +402,7 @@ public class CS361Labs {
 		}*/
 		/****************************************************** MERGE SORT *********************************************************************************/
 		//Below is a test method for the first lab or if you want to see the sum of the array.
-		//printSumOfArr();
+		//lab1.printSumOfArr();
 	}
 
 	
