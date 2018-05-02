@@ -6,7 +6,7 @@ first run,mergeSort,quickSort
 1 to 10000000,1822345918,1107885815
 ,,
 ,,
-second run,mergeSort,quickSort
+second run,,
 1 to 1000,838607,471599
 1 to 10000,1833533,1817297
 1 to 100000,17933583,9829564
@@ -14,7 +14,7 @@ second run,mergeSort,quickSort
 1 to 10000000,1906368241,1118819048
 ,,
 ,,
-third run,mergeSort,quickSort
+third run,,
 1 to 1000,898642,714005
 1 to 10000,2468624,1275846
 1 to 100000,20850773,9368538

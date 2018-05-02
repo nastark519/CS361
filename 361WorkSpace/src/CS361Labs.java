@@ -1,9 +1,6 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-/**
- * 
- */
+
+import java.io.*;
+import java.util.*;
 
 /**
  * @author Nathan Stark
@@ -16,8 +13,80 @@ public class CS361Labs {
 	//The array that is made from the lab file given.
 	private static int[] arr;
 	
-	/* Much of the below code was helped and found on geeks for geeks https://www.geeksforgeeks.org/merge-sort/*/
+	/**************************************************************** LAB 2 *********************************************************************************/
 	
+	/* Much of the below code was helped and found on geeks for geeks https://www.geeksforgeeks.org/radix-sort/*/
+	
+	/**
+     * A get method to return the maximum number held in the array
+     * pasted.
+     * 
+     * @return The integer with the highest value in the array past.
+     * @param arrR An array of integers.
+     * @param n The length in the array to which you would like to go to find a max value.
+     * The max param for this value will be restricted to is the length of the array.
+     */
+    private int getMax(int[] arrR, int n)
+    {
+        int mx = arrR[0];
+        for (int i = 1; i < n; i++)
+            if (arrR[i] > mx)
+                mx = arrR[i];
+        return mx;
+    }
+ 
+    /**
+     * A function that uses counting sort to sort the array passed into arrC
+     * 
+     * @param arrC An array of integers.
+     * @param n The length in the array to which you would like to go to find a max value.
+     * The max param for this value will be restricted to is the length of the array.
+     * @param dig The digit that countSort will use for the sorting.
+     */
+    private void countSort(int[] arrC, int n, int dig)
+    {
+        int output[] = new int[n];							// init. that output array to length n.
+        int i;												// An index init. for the for loops.
+        int count[] = new int[10];							// init. the count array for base ten digits.
+        Arrays.fill(count,0);								// Fill the count array all zeros.
+
+        for (i = 0; i < n; i++)								// Store the count of occurrences in count[]
+            count[ (arrC[i]/dig)%10 ]++;
+ 
+        for (i = 1; i < 10; i++)							// Change the values of count at index i so that it reflex
+            count[i] += count[i - 1];						// how many digits that are less than or equal to that digit.
+ 
+        
+        for (i = n - 1; i >= 0; i--)						// Build the output array with the values of arrC 
+        {													// divided by the digit we are using as an index to count[] that
+            output[count[ (arrC[i]/dig)%10 ] - 1] = arrC[i];// will be used as an index for the output array that we will set to the arrC of index i.
+            count[ (arrC[i]/dig)%10 ]--;					// Decrement what the integer in count array at the index we used for the out put array.
+        }
+ 
+        
+        
+        for (i = 0; i < n; i++){							// Copy the output array to arrC[], so that arr[] now
+            arrC[i] = output[i];							// contains sorted numbers according to current digit
+            }
+    }
+ 
+    // The main function to that sorts arr[] of size n using
+    // Radix Sort
+    public void radixsort(int[] arrR, int n)
+    {
+        
+        int m = getMax(arrR, n);							// Find the maximum number in order to know number of digits needed.
+ 
+        // Do counting sort for every digit. Note that instead
+        // of passing digit number, dig is passed. dig is 10^i
+        // where i is current digit number
+        for (int dig = 1; m/dig > 0; dig *= 10){
+        	countSort(arrR, n, dig);
+        	}
+    }
+	
+	/* Much of the below code was helped and found on geeks for geeks https://www.geeksforgeeks.org/merge-sort/*/
+	/**************************************************************** LAB 1 *********************************************************************************/
 	/**
 	 * Sort an array with merge sort.
 	 * 
@@ -201,35 +270,69 @@ public class CS361Labs {
 		return arr;
 	}
 	
+	/**
+	 *   Check the sum to make sure that is it the array we started with.
+	 *   As we are given in the first lab the sum of the array for testing
+	 *   if our code works.
+	 */
+	public void printSumOfArr(){
+	
+		long sumOfArr = 0;
+		for(int i=0;i<arr.length;i++){
+			sumOfArr += arr[i]; 
+		}
+		System.out.println("The sum of the array is " + sumOfArr + ".");
+		
+	}
+	
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		CS361Labs lab1 = new CS361Labs();
+		CS361Labs lab2 = new CS361Labs();
 		try{
-			lab1.fileToRead(new File("../nstarklab1/lab1 data file/lab1_data.txt"));
+			lab2.fileToRead(new File("../nstarklab2/lab3_data.txt"));
 		} catch (FileNotFoundException e){
 			e.printStackTrace();
 		}
 		if(arr.length - 1 ==9999999){
 				System.out.println("The array is of proper length.");
-			}
-		/********************************************************* QUICK SORT *******************************************************************************/
+				}
 		
 		int x = 1;
 		for(int y = 1000; y <= arr.length; y  = y * 10){
-		long quickSortTime = System.nanoTime();
-			lab1.auxQuickSort(arr, 0, y - 1);
-			System.out.println("Merge sort ran " + x + ": " + (System.nanoTime() - quickSortTime));
+		long radixSortTime = System.nanoTime();
+		lab2.radixsort(arr,y);
+			System.out.println("Radix sort ran " + x + ": " + (System.nanoTime() - radixSortTime));
 			x++;
 		}
-		if(lab1.flgIsSorted(arr)){
+		
+		//lab2.radixsort(arr,arr.length); test for radix sort
+		if(lab2.flgIsSorted(arr)){
+			System.out.println("The array was sorted using radix sort.");
+		}else{
+			System.out.println("It didn't work.");
+		}
+		/*for(int c=arr.length - 11;c<arr.length;c++){
+			System.out.println(arr[c]);
+		}*/
+		/********************************************************* QUICK SORT *******************************************************************************/
+		/*
+		int x = 1;
+		for(int y = 1000; y <= arr.length; y  = y * 10){
+		long quickSortTime = System.nanoTime();
+			lab2.auxQuickSort(arr, 0, y - 1);
+			System.out.println("Quick sort ran " + x + ": " + (System.nanoTime() - quickSortTime));
+			x++;
+		}
+		if(lab2.flgIsSorted(arr)){
 			System.out.println("The array was sorted using quick sort.");
 		}else{
 			System.out.println("It didn't work.");
 		}
-		
+		*/
+		/********************************************************* QUICK SORT *******************************************************************************/
 
 		/****************************************************** MERGE SORT *********************************************************************************/
 		/*
@@ -249,13 +352,9 @@ public class CS361Labs {
 		/*for(int i= arr.length - 11;i<arr.length;i++){ 
 			System.out.println(arr[i]);
 		}*/
-		
-		// Check the sum to make sure that is it the array we started with.
-		long sumOfArr = 0;
-		for(int i=0;i<arr.length;i++){
-			sumOfArr += arr[i]; 
-		}
-		System.out.println("The sum of the array is " + sumOfArr + ".");
+		/****************************************************** MERGE SORT *********************************************************************************/
+		//Below is a test method for the first lab or if you want to see the sum of the array.
+		//printSumOfArr();
 	}
 
 	
