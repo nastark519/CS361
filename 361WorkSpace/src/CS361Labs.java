@@ -15,23 +15,35 @@ public class CS361Labs {
 	
 	/**************************************************************** LAB 2 *********************************************************************************/
 	
+	/* The bin sort algorithm was written with the help of looking at the code from 
+	 * https://github.com/skoliver89/CS361-Lab3/blob/master/Lab3.java yet it was
+	 * modified by myself in order to fit other function and requierments to this lab.
+	 * All comments and documentation were add to show understanding and to clearify the
+	 * code and functionality.*/
+	
+	/**
+	 * A signal method that implements bin sort algorithm.
+	 * 
+	 * @param arrB An int. array that the bin sort alg. will be applied to.
+	 * @param lengthTo The length to which you want to apply the sort to.
+	 */
 	public void binSort(int[] arrB, int lengthTo){
-		int n = getMax(arrB, lengthTo);
-		int[] bin = new int[n+1];
-		int i;
+		int n = getMax(arrB, lengthTo);					// Get the maximum value upto the index you want to go to.
+		int[] bin = new int[n+1];						// Set the bin array to be one greater than the max value that was just found.
+		int i;// this is just an indexer for the next few loops.
 		
 		for(i=0;i<=n;i++){
-			bin[i] = 0;
+			bin[i] = 0;									// init. the bins to zero.
 		}
 		
 		for(i=0;i<=lengthTo - 1;i++){
-			bin[arrB[i]]++;
-		}
+			bin[arrB[i]]++;								// Using increment the the index of bins for every value that is in arrB
+		}												// up to the index that we are inspecting in arrB.
 		
 		int outIndex = 0;
 		for(i=0;i<=n;i++){
-			for(int j=0;j<bin[i];j++){
-				arrB[outIndex]=i;
+			for(int j=0;j<bin[i];j++){					// Go through the bins and find out how many numbers are in it.
+				arrB[outIndex]=i;						// Put the numbers from bin back into the array.
 				outIndex++;
 			}
 		}
@@ -320,44 +332,63 @@ public class CS361Labs {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		CS361Labs lab2 = new CS361Labs();
+		/*
+		//Read in the file to set up radix sort==========================================================
+		CS361Labs lab2RadixSort = new CS361Labs();
 		try{
-			lab2.fileToRead(new File("../nstarklab2/lab3_data.txt"));
+			lab2RadixSort.fileToRead(new File("../nstarklab2/lab3_data.txt"));
 		} catch (FileNotFoundException e){
 			e.printStackTrace();
-		}
-		if(arr.length - 1 ==9999999){
-				System.out.println("The array is of proper length.");
+			}
+		
+		//Read in the file to set up bin sort=============================================================
+		CS361Labs lab2BinSort = new CS361Labs();
+		try{
+			lab2BinSort.fileToRead(new File("../nstarklab2/lab3_data.txt"));
+		} catch (FileNotFoundException e){
+			e.printStackTrace();
+			}
+		*/
+		//Read in the file to set up quick sort=============================================================
+		CS361Labs lab2QuickSort = new CS361Labs();
+		try{
+			lab2QuickSort.fileToRead(new File("../nstarklab2/lab3_data.txt"));
+			} catch (FileNotFoundException e){
+				e.printStackTrace();
 				}
-		/********************************************************* BIN SORT *******************************************************************************/
+		
+		
+		/*********************************************************  BIN SORT  *******************************************************************************/
+		
+		/*
 		int x = 1;
 		for(int y = 1000; y <= arr.length; y  = y * 10){
 		long binSortTime = System.nanoTime();
-		lab2.binSort(arr,y);
-			System.out.println("Radix sort ran " + x + ": " + (System.nanoTime() - binSortTime));
+		lab2BinSort.binSort(arr,y);
+			System.out.println("Bin sort ran " + x + ": " + (System.nanoTime() - binSortTime));
 			x++;
 		}
 		
-		if(lab2.flgIsSorted(arr)){
+		if(lab2BinSort.flgIsSorted(arr)){
 			System.out.println("The array was sorted using bin sort.");
 		}else{
 			System.out.println("It didn't work.");
 		}
+		*/
 		
-		
-		/********************************************************* BIN SORT *******************************************************************************/
+		/*********************************************************  BIN SORT  *******************************************************************************/
 
 		/********************************************************* RADIX SORT *******************************************************************************/
 		/*
 		int x = 1;
 		for(int y = 1000; y <= arr.length; y  = y * 10){
 		long radixSortTime = System.nanoTime();
-		lab2.radixsort(arr,y);
+		lab2RadixSort.radixsort(arr,y);
 			System.out.println("Radix sort ran " + x + ": " + (System.nanoTime() - radixSortTime));
 			x++;
 		}
 		
-		if(lab2.flgIsSorted(arr)){
+		if(lab2RadixSort.flgIsSorted(arr)){
 			System.out.println("The array was sorted using radix sort.");
 		}else{
 			System.out.println("It didn't work.");
@@ -366,20 +397,20 @@ public class CS361Labs {
 		/********************************************************* RADIX SORT *******************************************************************************/
 		
 		/********************************************************* QUICK SORT *******************************************************************************/
-		/*
+		
 		int x = 1;
 		for(int y = 1000; y <= arr.length; y  = y * 10){
 		long quickSortTime = System.nanoTime();
-			lab2.auxQuickSort(arr, 0, y - 1);
+		lab2QuickSort.auxQuickSort(arr, 0, y - 1);
 			System.out.println("Quick sort ran " + x + ": " + (System.nanoTime() - quickSortTime));
 			x++;
 		}
-		if(lab2.flgIsSorted(arr)){
+		if(lab2QuickSort.flgIsSorted(arr)){
 			System.out.println("The array was sorted using quick sort.");
 		}else{
 			System.out.println("It didn't work.");
 		}
-		*/
+		
 		/********************************************************* QUICK SORT *******************************************************************************/
 
 		/****************************************************** MERGE SORT *********************************************************************************/
