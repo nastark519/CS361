@@ -12,8 +12,94 @@ public class CS361Labs {
 	private Scanner scan;
 	//The array that is made from the lab file given.
 	private static int[] arr;
+	//
+	private static int[] topTen = new int[10];
 	
 	/**************************************************************** LAB 2 *********************************************************************************/
+	
+	/**
+	 * 
+	 * 
+	 * @param ray The array that you want to find the top ten integers form.
+	 * @param y 
+	 * @param n
+	 */
+	public void step6(int[] ray,int y,int n){
+		
+		int temp = getIndexOfMax(ray,0,n);
+		
+		topTen[y]= ray[temp];
+		int temp2 = ray[n];
+		ray[temp] = temp2;
+		ray[n] = topTen[y];
+		if(y<9){
+			step6(ray,y+1,n-1);					//Recursive call.
+		}
+		
+	}
+	/**
+	 * 
+	 * 
+	 * @param arrRec
+	 * @param y
+	 * @param n
+	 * @return
+	 */
+	public int getIndexOfMax(int[] arrRec, int y, int n) {
+		int indexOfMax = 0;
+		for (int i = y; i < n; i++)
+			if (arrRec[i] > arrRec[indexOfMax]) {
+				indexOfMax = i;
+			}
+		return indexOfMax;
+
+	}
+	
+	
+	
+	
+	
+	/**
+	 * This is my recursive alg. to print out the top 10 integers of the array 
+	 * that has been sorted.
+	 * 
+	 * @param arrRe the array we are looking at
+	 * @param n The index that you start at.
+	 *//*
+	public void topTenDsc(int[] arrRe, int n){
+		if(!(n%3==0 && n%10==0)){									// Since I know what we are going to be passing in I can use this module arithmetic
+			System.out.println("Recursive " + arrRe[n -1]);			// Print the largest numbers first before calling the method again.
+			topTenDsc(arrRe, n - 1);								// Recursive call.
+		}
+    }
+	*/
+	/*
+	public int getRecu(int[] arrRec, int y, int n){
+		
+		return y;
+	}
+	
+	
+	
+	public int findMax(int[] ray, int sizeArr, boolean isFirst){
+		
+		if(isFirst){
+			topTen[0] = getMax(ray, sizeArr);
+		}
+		int lastMax;
+		for(int i =1;i<10;i++){
+			int temp1 = getMax(ray,sizeArr-1);
+			if(topTen[i]<temp1&&temp1<topTen[i-1]){
+				int temp2=topTen[i];
+				topTen[i]=temp1;
+				topTen[i+1]=temp2;
+				
+			}
+		}
+		
+		return lastMax;
+	}
+	*/
 	
 	/* The bin sort algorithm was written with the help of looking at the code from 
 	 * https://github.com/skoliver89/CS361-Lab3/blob/master/Lab3.java yet it was
@@ -60,8 +146,7 @@ public class CS361Labs {
      * @param n The length in the array to which you would like to go to find a max value.
      * The max param for this value will be restricted to is the length of the array.
      */
-    private int getMax(int[] arrR, int n)
-    {
+    private int getMax(int[] arrR, int n){
         int mx = arrR[0];
         for (int i = 1; i < n; i++)
             if (arrR[i] > mx)
@@ -77,8 +162,7 @@ public class CS361Labs {
      * The max param for this value will be restricted to is the length of the array.
      * @param dig The digit that countSort will use for the sorting.
      */
-    private void countSort(int[] arrC, int n, int dig)
-    {
+    private void countSort(int[] arrC, int n, int dig){
         int output[] = new int[n];							// init. that output array to length n.
         int i;												// An index init. for the for loops.
         int count[] = new int[10];							// init. the count array for base ten digits.
@@ -345,18 +429,36 @@ public class CS361Labs {
 		CS361Labs lab2BinSort = new CS361Labs();
 		try{
 			lab2BinSort.fileToRead(new File("../nstarklab2/lab3_data.txt"));
-		} catch (FileNotFoundException e){
+		} 
+		catch (FileNotFoundException e){
 			e.printStackTrace();
 			}
-		*/
+		
 		//Read in the file to set up quick sort=============================================================
 		CS361Labs lab2QuickSort = new CS361Labs();
 		try{
 			lab2QuickSort.fileToRead(new File("../nstarklab2/lab3_data.txt"));
-			} catch (FileNotFoundException e){
-				e.printStackTrace();
+			} 
+		catch (FileNotFoundException e){
+			e.printStackTrace();
+				}
+		*/
+		CS361Labs lab2Recursive = new CS361Labs();
+		try{
+			lab2Recursive.fileToRead(new File("../nstarklab2/lab3_data.txt"));
+			} 
+		catch (FileNotFoundException e){
+			e.printStackTrace();
 				}
 		
+		/*******************************************************Recursive Alg.*******************************************************************************/
+		long recursiveTime = System.nanoTime();
+		lab2Recursive.step6(arr, 0, arr.length - 1);
+		System.out.println("The time it took " + (System.nanoTime()-recursiveTime));
+		for(int x:topTen){
+			System.out.println("The top ten " + x);
+		}
+		/*******************************************************Recursive Alg.*******************************************************************************/
 		
 		/*********************************************************  BIN SORT  *******************************************************************************/
 		
@@ -397,11 +499,11 @@ public class CS361Labs {
 		/********************************************************* RADIX SORT *******************************************************************************/
 		
 		/********************************************************* QUICK SORT *******************************************************************************/
-		
+		/*
 		int x = 1;
 		for(int y = 1000; y <= arr.length; y  = y * 10){
-		long quickSortTime = System.nanoTime();
-		lab2QuickSort.auxQuickSort(arr, 0, y - 1);
+			long quickSortTime = System.nanoTime();
+			lab2QuickSort.auxQuickSort(arr, 0, y - 1);
 			System.out.println("Quick sort ran " + x + ": " + (System.nanoTime() - quickSortTime));
 			x++;
 		}
@@ -410,7 +512,7 @@ public class CS361Labs {
 		}else{
 			System.out.println("It didn't work.");
 		}
-		
+		*/
 		/********************************************************* QUICK SORT *******************************************************************************/
 
 		/****************************************************** MERGE SORT *********************************************************************************/
@@ -435,6 +537,5 @@ public class CS361Labs {
 		//Below is a test method for the first lab or if you want to see the sum of the array.
 		//lab1.printSumOfArr();
 	}
-
 	
 }
