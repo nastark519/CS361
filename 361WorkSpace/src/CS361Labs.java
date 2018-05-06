@@ -18,32 +18,33 @@ public class CS361Labs {
 	/**************************************************************** LAB 2 *********************************************************************************/
 	
 	/**
-	 * 
+	 * This method uses recursion to find and sort the top ten values in the array
+	 * passed and stores them in the array topTen which is a field held in this class.
 	 * 
 	 * @param ray The array that you want to find the top ten integers form.
-	 * @param y 
-	 * @param n
+	 * @param y The starting index of the array that we want to look to.
+	 * @param n The ending index of the array that we want to look to.
 	 */
-	public void step6(int[] ray,int y,int n){
+	public void findTopTen(int[] ray,int y,int n){
 		
-		int temp = getIndexOfMax(ray,0,n);
-		
-		topTen[y]= ray[temp];
-		int temp2 = ray[n];
-		ray[temp] = temp2;
-		ray[n] = topTen[y];
-		if(y<9){
-			step6(ray,y+1,n-1);					//Recursive call.
+		int temp = getIndexOfMax(ray,0,n);		// Get the max value's index from the array
+												// in the array give the interval 0 to n and store the value in temp.
+		topTen[y]= ray[temp];					// sore the max values of the array and store it in the field array topTen.
+		ray[temp] = ray[n];						// Take where the max number is set it in to what the last value in the array is.
+		ray[n] = topTen[y];						// Now take the last value in the array to what the max value is.
+		if(y<9){								// Only make the recursive call 10 times.
+			findTopTen(ray,y+1,n-1);					// Recursive call.
 		}
 		
 	}
 	/**
+	 * The method will parse through the array and find the index of the max
+	 * value found in the array.
 	 * 
-	 * 
-	 * @param arrRec
-	 * @param y
-	 * @param n
-	 * @return
+	 * @param arrRec the array that will be passed.
+	 * @param y The starting of the index of the array that we are looking at.
+	 * @param n The ending of the index of the array that we are looking at.
+	 * @return The index of the max value found in the array passed.
 	 */
 	public int getIndexOfMax(int[] arrRec, int y, int n) {
 		int indexOfMax = 0;
@@ -405,9 +406,11 @@ public class CS361Labs {
 	/**
 	 * Print the last ten integers of the array.
 	 */
-	public void printLastTen(){
-		for(int c=arr.length - 11;c<arr.length;c++){
-			System.out.println(arr[c]);
+	public void printLastTen(int y){
+		int q=0;
+		for(int c=y - 1;c>y- 11;c--){
+			System.out.println(q + ".) " + arr[c]);
+			q++;
 			}
 		}
 	
@@ -425,7 +428,7 @@ public class CS361Labs {
 			e.printStackTrace();
 			}
 		
-		//Read in the file to set up bin sort=============================================================
+		//Read in the file to set up bin sort=================================================================================================================
 		CS361Labs lab2BinSort = new CS361Labs();
 		try{
 			lab2BinSort.fileToRead(new File("../nstarklab2/lab3_data.txt"));
@@ -434,7 +437,7 @@ public class CS361Labs {
 			e.printStackTrace();
 			}
 		
-		//Read in the file to set up quick sort=============================================================
+		//Read in the file to set up quick sort===============================================================================================================
 		CS361Labs lab2QuickSort = new CS361Labs();
 		try{
 			lab2QuickSort.fileToRead(new File("../nstarklab2/lab3_data.txt"));
@@ -443,6 +446,7 @@ public class CS361Labs {
 			e.printStackTrace();
 				}
 		*/
+		//Read in the file to set up the recursive method=====================================================================================================
 		CS361Labs lab2Recursive = new CS361Labs();
 		try{
 			lab2Recursive.fileToRead(new File("../nstarklab2/lab3_data.txt"));
@@ -452,12 +456,20 @@ public class CS361Labs {
 				}
 		
 		/*******************************************************Recursive Alg.*******************************************************************************/
-		long recursiveTime = System.nanoTime();
-		lab2Recursive.step6(arr, 0, arr.length - 1);
-		System.out.println("The time it took " + (System.nanoTime()-recursiveTime));
-		for(int x:topTen){
-			System.out.println("The top ten " + x);
-		}
+		
+		int x = 1;
+		for(int y = 1000; y <= arr.length; y  = y * 10){
+			long recursiveTime = System.nanoTime();
+			lab2Recursive.findTopTen(arr, 0, y - 1);
+			System.out.println(x + ".) The time it took :" + (System.nanoTime()-recursiveTime));
+			x++;
+			int w = 1;
+			for(int p:topTen){
+				System.out.println("The top ten " + w + ".)" + p);
+				w++;
+				}
+			}
+		
 		/*******************************************************Recursive Alg.*******************************************************************************/
 		
 		/*********************************************************  BIN SORT  *******************************************************************************/
@@ -483,16 +495,17 @@ public class CS361Labs {
 		/********************************************************* RADIX SORT *******************************************************************************/
 		/*
 		int x = 1;
-		for(int y = 1000; y <= arr.length; y  = y * 10){
-		long radixSortTime = System.nanoTime();
-		lab2RadixSort.radixsort(arr,y);
+		for (int y = 1000; y <= arr.length; y = y * 10) {
+			long radixSortTime = System.nanoTime();
+			lab2RadixSort.radixsort(arr, y);
+			lab2RadixSort.printLastTen(y);
 			System.out.println("Radix sort ran " + x + ": " + (System.nanoTime() - radixSortTime));
 			x++;
 		}
-		
-		if(lab2RadixSort.flgIsSorted(arr)){
+
+		if (lab2RadixSort.flgIsSorted(arr)) {
 			System.out.println("The array was sorted using radix sort.");
-		}else{
+		} else {
 			System.out.println("It didn't work.");
 		}
 		*/
