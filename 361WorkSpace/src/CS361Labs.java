@@ -8,12 +8,166 @@ import java.util.*;
  *
  */
 public class CS361Labs {
-	//Scanner to read the lab files.
+	// Scanner to read the lab files.
 	private Scanner scan;
-	//The array that is made from the lab file given.
+	// The array that is made from the lab file given.
 	private static int[] arr;
-	//
+	// The array that is to store the top ten values from the recursive method (see lab 2).
 	private static int[] topTen = new int[10];
+	// A matrix to be shown. eno get it from the matrix lol.
+	private static int[][] eno;
+	// A test field that will indicate weather the matrix has been made.
+	private static boolean matrixMade = false;
+	// The number of vertices.
+	private  int V;
+	// The adjacency list.
+	private LinkedList<Integer> adj[];
+	
+	
+	
+	/**************************************************************** LAB 3 *********************************************************************************/
+	
+	/**
+	 * This is the setting up method for the graph the be traversed.
+	 * This code is found on GeeksForGeeks.com
+	 * https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/
+	 * 
+	 * @param vert the number of vertices there are in the given graph.
+	 */
+	@SuppressWarnings("unchecked")
+	public void graph(int vert){
+		
+		V = vert;
+		
+		adj = new LinkedList[vert];							//Set the adjacency list to have vert number of vertices
+		for(int i=0;i<vert;i++){
+			adj[i] = new LinkedList<Integer>();				// Initialize the linkedLists into the adj.
+		}
+	}
+	
+	/**
+	 * The method to add an edge in in the graph.
+	 * This code is found on GeeksForGeeks.com
+	 * https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/
+	 * 
+	 * @param vert which vertex the edge is getting a set to.
+	 * @param w the other vertex to which will be connected.
+	 */
+	public void addEdge(int vert, int w){
+		adj[vert].add(w);
+	}
+	
+	/**
+	 * This is the breath first search using the adjacency list.
+	 * This code is found on GeeksForGeeks.com
+	 * https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/
+	 * 
+	 * @param s the root of the breath first search.
+	 */
+	public void bfsAdjLinked(int s){
+		
+        boolean visited[] = new boolean[V];						// By default all values will be set to false a loop could used but is unneeded.
+ 
+        LinkedList<Integer> queue = new LinkedList<Integer>(); 	// The queue for the bfs is initiated.
+ 
+        visited[s]=true;										// The first/root vertex is visited.
+        queue.add(s);											// The first/root in now in the queue.
+ 
+        while (queue.size() != 0)
+        {
+            s = queue.poll();									// Take the fist vertex out of the queue and print it
+            System.out.print(s+" ");
+ 
+            // Get all adjacent vertices of the dequeued vertex s
+            // If a adjacent has not been visited, then mark it
+            // visited and enqueue it
+            Iterator<Integer> i = adj[s].listIterator();
+            while (i.hasNext())
+            {
+                int n = i.next();
+                if (!visited[n])
+                {
+                    visited[n] = true;
+                    queue.add(n);
+                }
+            }
+        }
+	}
+	
+	/**
+	 * This in my memoization matrix chain multiplication method for lab 3
+	 * of CS 361 I was helped with this code from GeeksForGeeks.com
+	 * http://www.geeksforgeeks.org/dynamic-programming-set-8-matrix-chain-multiplication/.
+	 * Slite changes have been mad by Nathan Stark. 
+	 * 
+	 * @param p is the array of the sizes of the matrixes.
+	 * @param i is the lower bound index.
+	 * @param j is the upper bound index.
+	 * @return the value of the work needed to multiply the matrices.
+	 */
+	public int matrixCainMemo(int[] p, int i, int j){
+		
+		if(!matrixMade){
+			eno = new int[j + 1][j + 1];			// Initialize the matrix.
+			matrixMade = true;						// Once the matrix in made don't make another.
+		}
+		if(i==j){									// Check to see if you are on the diagonal 
+			return eno[i][j] = 0;					// If you are set the value to 0 and return the value.
+		}
+		int min = -1;								// Set the min to an impossible value so that it is easily checked for.
+		
+		for(int k=i;k<j;k++){
+			int count = matrixCainMemo(p,i,k) + 	// Do the math using recursive calls.
+					matrixCainMemo(p,k+1,j) + p[i-1]*p[k]*p[j];
+			if((min == -1) || (count<min)){			// Check the min to see if it makes sense and check in the count is less than the min. 
+				min=count;							// Change the min to the count value.
+				eno[i][j]=min;						// Set the value at the ith and jth place.
+			}
+		}
+		return min;									// Return the min.
+	}
+	
+	
+	
+	/**
+	 * This in my DP matrix chain multiplication method for lab 3
+	 * of CS 361 I had found this code on GeeksForGeeks.com at 
+	 * http://www.geeksforgeeks.org/dynamic-programming-set-8-matrix-chain-multiplication/
+	 * This code is contributed by Rajat Mishra.
+	 * 
+	 * @param p is the array of the sizes of the matrixes.
+	 * @param n is the length of the array of p.
+	 * @return 
+	 */
+	public int matrixChainDP(int[] p, int n){
+		
+		eno = new int[n][n];							// Initialize the matrix.
+		
+		int i,j,k,L,q;									// Variables to be descried and/or used later.
+		
+		for(i=1;i<n;i++){								// i will be used through out as just an indexing.
+			eno[i][i] = 0;								// Fill in the diagonal of the matrix.
+		}
+		
+		for(L=2;L<n;L++){								// L is to keep track of the length of the chain.
+			for(i=1;i<n-L+1;i++){
+				j=i+L-1;
+				if(j==n) continue;
+				eno[i][j] = Integer.MAX_VALUE;
+				for(k=i;k<=j-1;k++){					// k and j are also just indexers.
+					q = eno[i][k] + eno[k+1][j] + 		// q is the cost to multiply.
+							p[i-1]*p[k]*p[j];
+					if(q<eno[i][j]){
+						eno[i][j] = q;
+					}
+				}
+			}
+		}
+		return eno[1][n-1];
+	}
+	
+	
+	/**************************************************************** LAB 3 *********************************************************************************/
 	
 	/**************************************************************** LAB 2 *********************************************************************************/
 	
@@ -37,6 +191,7 @@ public class CS361Labs {
 		}
 		
 	}
+	
 	/**
 	 * The method will parse through the array and find the index of the max
 	 * value found in the array.
@@ -56,51 +211,22 @@ public class CS361Labs {
 
 	}
 	
-	
-	
-	
-	
 	/**
+	 * The below is what I thought was what was wanted but it isn't.
+	 * 
 	 * This is my recursive alg. to print out the top 10 integers of the array 
 	 * that has been sorted.
 	 * 
 	 * @param arrRe the array we are looking at
 	 * @param n The index that you start at.
-	 *//*
+	 */
 	public void topTenDsc(int[] arrRe, int n){
 		if(!(n%3==0 && n%10==0)){									// Since I know what we are going to be passing in I can use this module arithmetic
 			System.out.println("Recursive " + arrRe[n -1]);			// Print the largest numbers first before calling the method again.
 			topTenDsc(arrRe, n - 1);								// Recursive call.
 		}
     }
-	*/
-	/*
-	public int getRecu(int[] arrRec, int y, int n){
-		
-		return y;
-	}
 	
-	
-	
-	public int findMax(int[] ray, int sizeArr, boolean isFirst){
-		
-		if(isFirst){
-			topTen[0] = getMax(ray, sizeArr);
-		}
-		int lastMax;
-		for(int i =1;i<10;i++){
-			int temp1 = getMax(ray,sizeArr-1);
-			if(topTen[i]<temp1&&temp1<topTen[i-1]){
-				int temp2=topTen[i];
-				topTen[i]=temp1;
-				topTen[i+1]=temp2;
-				
-			}
-		}
-		
-		return lastMax;
-	}
-	*/
 	
 	/* The bin sort algorithm was written with the help of looking at the code from 
 	 * https://github.com/skoliver89/CS361-Lab3/blob/master/Lab3.java yet it was
@@ -189,8 +315,12 @@ public class CS361Labs {
             }
     }
  
-    // The main function to that sorts arr[] of size n using
-    // Radix Sort
+    /**
+     * The main function that sorts the array passed in to index n using Radix Sort
+     * 
+     * @param arrR The array that is being passed in and that you want sorted.
+     * @param n The index to which you want to sort to.
+     */
     public void radixsort(int[] arrR, int n)
     {
         
@@ -419,8 +549,77 @@ public class CS361Labs {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
+/**************************************************************** ADJ_L *********************************************************************************/
+		CS361Labs lab3AdjL = new CS361Labs();
+		lab3AdjL.graph(14);
+		lab3AdjL.addEdge(0, 1);
+		lab3AdjL.addEdge(0, 3);
+		lab3AdjL.addEdge(1, 2);
+		lab3AdjL.addEdge(2, 13);
+		lab3AdjL.addEdge(2, 12);
+		lab3AdjL.addEdge(3, 4);
+		lab3AdjL.addEdge(3, 5);
+		lab3AdjL.addEdge(3, 6);
+		lab3AdjL.addEdge(3, 13);
+		lab3AdjL.addEdge(4, 5);
+		lab3AdjL.addEdge(5, 7);
+		lab3AdjL.addEdge(6, 9);
+		lab3AdjL.addEdge(7, 8);
+		lab3AdjL.addEdge(8, 9);
+		lab3AdjL.addEdge(9, 13);
+		lab3AdjL.addEdge(9, 10);
+		lab3AdjL.addEdge(10, 11);
+		lab3AdjL.addEdge(11, 12);
+		lab3AdjL.addEdge(12, 13);
+		
+		
+		lab3AdjL.bfsAdjLinked(0);
+		
+/**************************************************************** ADJ_L *********************************************************************************/
+		
+		
+/**************************************************************** MCM_M *********************************************************************************/
 		/*
-		//Read in the file to set up radix sort==========================================================
+		CS361Labs lab3MCMM = new CS361Labs();
+		arr = new int[] {30,4,8,5,10,25,15};
+        int n = arr.length;
+        lab3MCMM.matrixCainMemo(arr,1, n-1);
+ 
+        for(int t=1;t<n;t++){
+        	int c= t+1;
+        	String repeat = new String(new char[t*2]).replace("\0", "---");
+        	System.out.print(repeat+"-]"+eno[t][t]);
+        	for(c=t+1;c<n;c++){
+        		System.out.print("  "+eno[t][c]);
+        	}
+        	System.out.println();
+        }
+		*/
+		
+/**************************************************************** MCM_M *********************************************************************************/
+		
+/**************************************************************** DP_MCM *********************************************************************************/
+		/*
+		CS361Labs lab3DPMCM = new CS361Labs();
+		arr = new int[] {30,4,8,5,10,25,15};								// initialize the p array.
+        int size = arr.length;
+        lab3DPMCM.matrixChainDP(arr, size);
+ 
+        for(int t=1;t<size;t++){											// the following will print the top half of the matrix.
+        	int c= t+1;
+        	String repeat = new String(new char[t*2]).replace("\0", "---");
+        	System.out.print(repeat+"-]"+eno[t][t]);
+        	for(c=t+1;c<size;c++){
+        		System.out.print("  "+eno[t][c]);
+        	}
+        	System.out.println();
+        }
+		*/
+/**************************************************************** DP_MCM *********************************************************************************/
+		
+		/*
+		//Read in the file to set up radix sort============================================================================================================
 		CS361Labs lab2RadixSort = new CS361Labs();
 		try{
 			lab2RadixSort.fileToRead(new File("../nstarklab2/lab3_data.txt"));
@@ -445,7 +644,7 @@ public class CS361Labs {
 		catch (FileNotFoundException e){
 			e.printStackTrace();
 				}
-		*/
+		
 		//Read in the file to set up the recursive method=====================================================================================================
 		CS361Labs lab2Recursive = new CS361Labs();
 		try{
@@ -454,9 +653,10 @@ public class CS361Labs {
 		catch (FileNotFoundException e){
 			e.printStackTrace();
 				}
+		*/
 		
-		/*******************************************************Recursive Alg.*******************************************************************************/
-		
+/*******************************************************Recursive Alg.*******************************************************************************/
+		/*
 		int x = 1;
 		for(int y = 1000; y <= arr.length; y  = y * 10){
 			long recursiveTime = System.nanoTime();
@@ -469,10 +669,10 @@ public class CS361Labs {
 				w++;
 				}
 			}
+		*/
+/*******************************************************Recursive Alg.*******************************************************************************/
 		
-		/*******************************************************Recursive Alg.*******************************************************************************/
-		
-		/*********************************************************  BIN SORT  *******************************************************************************/
+/*********************************************************  BIN SORT  *******************************************************************************/
 		
 		/*
 		int x = 1;
@@ -490,9 +690,9 @@ public class CS361Labs {
 		}
 		*/
 		
-		/*********************************************************  BIN SORT  *******************************************************************************/
+/*********************************************************  BIN SORT  *******************************************************************************/
 
-		/********************************************************* RADIX SORT *******************************************************************************/
+/********************************************************* RADIX SORT *******************************************************************************/
 		/*
 		int x = 1;
 		for (int y = 1000; y <= arr.length; y = y * 10) {
@@ -509,9 +709,9 @@ public class CS361Labs {
 			System.out.println("It didn't work.");
 		}
 		*/
-		/********************************************************* RADIX SORT *******************************************************************************/
+/********************************************************* RADIX SORT *******************************************************************************/
 		
-		/********************************************************* QUICK SORT *******************************************************************************/
+/********************************************************* QUICK SORT *******************************************************************************/
 		/*
 		int x = 1;
 		for(int y = 1000; y <= arr.length; y  = y * 10){
@@ -526,9 +726,9 @@ public class CS361Labs {
 			System.out.println("It didn't work.");
 		}
 		*/
-		/********************************************************* QUICK SORT *******************************************************************************/
+/********************************************************* QUICK SORT *******************************************************************************/
 
-		/****************************************************** MERGE SORT *********************************************************************************/
+/****************************************************** MERGE SORT *********************************************************************************/
 		/*
 		int x = 1;
 		for(int y = 1000; y <= arr.length; y  = y * 10){
@@ -546,7 +746,7 @@ public class CS361Labs {
 		/*for(int i= arr.length - 11;i<arr.length;i++){ 
 			System.out.println(arr[i]);
 		}*/
-		/****************************************************** MERGE SORT *********************************************************************************/
+/****************************************************** MERGE SORT *********************************************************************************/
 		//Below is a test method for the first lab or if you want to see the sum of the array.
 		//lab1.printSumOfArr();
 	}
